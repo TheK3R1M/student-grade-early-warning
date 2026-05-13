@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!-- Final Score optional field added -->
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Öğrenci Başarı Tahmin Sistemi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0d0f1a;
+      --surface: #151829;
+      --card: #1c2038;
+      --border: #2a3050;
+      --accent: #6366f1;
+      --accent2: #818cf8;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --success: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* HEADER */
+    header {
+      width: 100%;
+      background: linear-gradient(135deg, #1e1b4b 0%, #0d0f1a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+      text-align: center;
+    }
+
+    header .badge {
+      display: inline-block;
+      background: rgba(99, 102, 241, .18);
+      border: 1px solid rgba(99, 102, 241, .4);
+      color: var(--accent2);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c7d2fe, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .acc-pill {
+      display: inline-block;
+      background: rgba(34, 197, 94, .12);
+      border: 1px solid rgba(34, 197, 94, .3);
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 999px;
+      margin-top: 10px;
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 32px 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* INPUT GROUP */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .input-label span.val {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--accent2);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 2px 10px;
+      border-radius: 6px;
+      min-width: 48px;
+      text-align: center;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 8px rgba(99, 102, 241, .6);
+      cursor: pointer;
+      transition: transform .15s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* NUMBER INPUT */
+    .num-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .num-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .num-box label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .num-box input[type=number] {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .num-box input[type=number]:focus {
+      border-color: var(--accent);
+    }
+
+    /* BUTTON */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .5px;
+      transition: all .2s;
+      margin-top: 8px;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, .35);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(99, 102, 241, .5);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* RESULT PANEL */
+    #result-panel {
+      opacity: 0;
+      transition: opacity .4s;
+    }
+
+    #result-panel.visible {
+      opacity: 1;
+    }
+
+    .grade-display {
+      text-align: center;
+      padding: 20px 0 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .grade-letter {
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, #c7d2fe, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .risk-badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 18px;
+      border-radius: 999px;
+      margin-top: 10px;
+      border: 1px solid currentColor;
+    }
+
+    .score-line {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* PROB BARS */
+    .prob-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .prob-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .prob-grade {
+      width: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent2);
+    }
+
+    .prob-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .prob-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .6s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .prob-pct {
+      width: 38px;
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* INFO FOOTER */
+    .info-strip {
+      grid-column: 1 / -1;
+      background: rgba(99, 102, 241, .06);
+      border: 1px solid rgba(99, 102, 241, .2);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 32px;
+    }
+
+    .info-strip span {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* LOADING */
+    .btn.loading {
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    @media (max-width: 700px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .info-strip {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="badge">OSEMN Pipeline · Random Forest</div>
+    <h1>Öğrenci Başarı Tahmin Sistemi</h1>
+    <p>Vize ve davranışsal verilerle erken uyarı · Veri Analitiği Projesi</p>
+    <div class="acc-pill" style="margin-right:6px" id="pill-full">Tam Model: ...</div>
+    <div class="acc-pill" id="pill-early">Erken Uyari: ...</div>
+  </header>
+
+  <main>
+    <!-- INPUT CARD -->
+    <div class="card">
+      <div class="card-title">Öğrenci Verilerini Gir</div>
+
+      <!-- Akademik -->
+      <div class="input-group">
+        <div class="input-label">Vize Notu (Midterm_Score) <span class="val" id="v-midterm">70</span></div>
+        <input type="range" id="midterm" min="0" max="100" value="70"
+          oninput="updateVal('midterm','v-midterm',this.value)" />
+      </div>
+      <div class="input-group">
+        <div class="input-label">Ödev Ortalaması (Assignments_Avg) <span class="val" id="v-odv">70</span></div>
+        <input type="range" id="odv" min="0" max="100" value="70" oninput="updateVal('odv','v-odv',this.value)" />
+      </div>
+      <div class="input-group">
+        <div class="input-label">Proje Notu (Projects_Score) <span class="val" id="v-proje">70</span></div>
+        <input type="range" id="proje" min="0" max="100" value="70" oninput="updateVal('proje','v-proje',this.value)" />
+      </div>
+
+      <!-- Final Score (isteğe bağlı) -->
+      <div class="input-group"
+        style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:14px 16px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-size:13px;color:var(--text);font-weight:600">Final Notu (Final_Score) <span
+              style="font-size:11px;color:var(--accent2);background:rgba(99,102,241,.15);padding:2px 8px;border-radius:99px;margin-left:6px">İsteğe
+              Bağlı</span></div>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--muted)">
+            <input type="checkbox" id="final-toggle" onchange="toggleFinal(this.checked)"
+              style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer" />
+            Final gerçekleşti
+          </label>
+        </div>
+        <div id="final-disabled-msg" style="font-size:12px;color:var(--muted);font-style:italic">Final girmeden tahmin:
+          Final_Score feature olarak modele <strong style="color:#ef4444">hic girmez</strong> — ayri egitilmis erken
+          uyari modeli kullanilir.</div>
+        <div id="final-slider-wrap" style="display:none">
+          <div class="input-label">Değer: <span class="val" id="v-final">70</span></div>
+          <input type="range" id="final" min="0" max="100" value="70"
+            oninput="updateVal('final','v-final',this.value)" />
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border);margin:20px 0" />
+
+      <!-- Davranışsal -->
+      <div class="input-group">
+        <div class="input-label">Devam Oranı — Attendance (%) <span class="val" id="v-devam">75</span></div>
+        <input type="range" id="devam" min="0" max="100" value="75" oninput="updateVal('devam','v-devam',this.value)" />
+      </div>
+      <div class="input-group">
+        <div class="input-label">Stres Seviyesi — Stress_Level (1-10) <span class="val" id="v-stres">5</span></div>
+        <input type="range" id="stres" min="1" max="10" value="5" oninput="updateVal('stres','v-stres',this.value)" />
+      </div>
+      <div class="input-group">
+        <div class="input-label">Uyku Saati — Sleep_Hours_per_Night <span class="val" id="v-uyku">7</span></div>
+        <input type="range" id="uyku" min="4" max="10" step="0.5" value="7"
+          oninput="updateVal('uyku','v-uyku',this.value)" />
+      </div>
+
+      <button class="btn" id="predict-btn" onclick="predict()">🔍 Tahmin Et</button>
+    </div>
+
+    <!-- RESULT CARD -->
+    <div class="card" id="result-panel">
+      <div class="card-title">Tahmin Sonucu</div>
+
+      <div class="grade-display">
+        <div class="grade-letter" id="res-grade">—</div>
+        <div class="risk-badge" id="res-risk">—</div>
+        <div class="score-line" id="res-score"></div>
+        <div id="res-mod" style="font-size:11px;color:var(--accent2);margin-top:6px;font-style:italic;"></div>
+      </div>
+
+      <div class="prob-label">Sınıf Olasılıkları</div>
+      <div id="prob-bars"></div>
+    </div>
+
+    <!-- INFO STRIP -->
+    <div class="info-strip">
+      <div>Model: <span>RandomForestClassifier</span></div>
+      <div>n_estimators: <span>100</span></div>
+      <div>Eğitim / Test: <span>%80 / %20</span></div>
+      <div>Kodlama: <span>pd.get_dummies + StandardScaler</span></div>
+      <div>Hedef: <span>Grade (A/B/C/D/F)</span></div>
+    </div>
+  </main>
+
+  <script>
+    async function loadInfo() {
+      try {
+        const res = await fetch('/info');
+        const data = await res.json();
+        document.getElementById('pill-full').textContent = 'Tam Model: %' + data.acc_full;
+        document.getElementById('pill-early').textContent = 'Erken Uyari: %' + data.acc_early;
+      } catch (e) { }
+    }
+    loadInfo();
+
+    function updateVal(id, valId, val) {
+      document.getElementById(valId).textContent = val;
+    }
+
+    async function predict() {
+      const btn = document.getElementById('predict-btn');
+      btn.classList.add('loading');
+      btn.textContent = '⏳ Hesaplanıyor...';
+
+      const finalToggle = document.getElementById('final-toggle').checked;
+      const payload = {
+        midterm: document.getElementById('midterm').value,
+        final: finalToggle ? document.getElementById('final').value : null,
+        odv: document.getElementById('odv').value,
+        proje: document.getElementById('proje').value,
+        devam: document.getElementById('devam').value,
+        stres: document.getElementById('stres').value,
+        uyku: document.getElementById('uyku').value,
+      };
+
+      try {
+        const res = await fetch('/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const data = await res.json();
+        showResult(data);
+      } catch (e) {
+        alert('Bağlantı hatası: ' + e);
+      }
+
+      btn.classList.remove('loading');
+      btn.textContent = '🔍 Tahmin Et';
+    }
+
+    function toggleFinal(checked) {
+      document.getElementById('final-slider-wrap').style.display = checked ? 'block' : 'none';
+      document.getElementById('final-disabled-msg').style.display = checked ? 'none' : 'block';
+    }
+
+    function showResult(data) {
+      const panel = document.getElementById('result-panel');
+
+      document.getElementById('res-grade').textContent = data.grade;
+      const risk = document.getElementById('res-risk');
+      risk.textContent = data.risk_label;
+      risk.style.color = data.risk_color;
+      risk.style.borderColor = data.risk_color;
+      document.getElementById('res-score').textContent =
+        `Vize + Odev + Proje bilesen: ${data.total} puan`;
+      document.getElementById('res-mod').textContent = '⚡ ' + data.mod_label;
+
+      // Olasılık barları
+      const container = document.getElementById('prob-bars');
+      container.innerHTML = '';
+      const order = ['A', 'B', 'C', 'D', 'F'];
+      order.forEach(g => {
+        const pct = data.probs[g] ?? 0;
+        container.innerHTML += `
+        <div class="prob-row">
+          <div class="prob-grade">${g}</div>
+          <div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${pct}%"></div></div>
+          <div class="prob-pct">%${pct}</div>
+        </div>`;
+      });
+
+      panel.classList.add('visible');
+    }
+  </script>
+
+</body>
+
+</html>

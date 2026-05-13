@@ -1,0 +1,50 @@
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.env
+.venv
+venv/
+env/
+
+# ============================================
+# Ara / büyük veri dosyaları (Kaggle'dan indirilebilir)
+# ============================================
+data/step1_cleaned_data.csv
+data/osemn_cleaned_dataset.csv
+data/bolum_bazli/
+data/esit_parcalar/
+data/grade_bazli/
+data/tableau_sutunlar/
+data/parcala.py
+
+# ============================================
+# Taslak ve kaba notlar (portfolyo için gereksiz)
+# ============================================
+Yeni Metin Belgesi.txt
+Ders Notu (Karmaşık).md
+*.pdf
+GAMMA_Final_Temiz.md
+GAMMA_Kullanim_Rehberi.md
+GAMMA_Rapor_Final.md
+GAMMA_Sunum_Metni.md
+GAMMA_Sunum_v2.md
+OSEMN_Bilimsel_Rapor.md
+Proje_Raporu.md
+Sunum_Slaytlari.md
+uzman_sunum_rehberi.md
+
+# ============================================
+# OS / Editor
+# ============================================
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+
+GAMMA_HocaRevizyon_Final.md
+Sunum_Script_ve_Sorular.md
